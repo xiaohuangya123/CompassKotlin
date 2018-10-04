@@ -1,0 +1,36 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+        <!--<item name="colorPrimaryDark">@color/material_deep_teal_500</item>-->
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
+
+        <item name="colorPrimary">#1FC6B2</item>
+        <item name="colorPrimaryDark">@color/colorLightBlack</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        //设置系统状态栏透明
+        <!--<item name="android:statusBarColor">@android:color/transparent</item>-->
+    </style>
+
+
+    <!--启动页主题 开始-->
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.full" parent="AppTheme.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="AppTheme.splash" parent="AppTheme.full">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--<item name="android:windowBackground">@drawable/v</item>-->
+        <item name="android:colorBackgroundCacheHint">@null</item>
+    </style><!--启动页主题 结束-->
+
+
+</resources>

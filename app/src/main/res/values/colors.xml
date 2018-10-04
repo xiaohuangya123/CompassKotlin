@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/material_deep_teal_500</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="colorLightGray">#BDBDBD</color>
+    <color name="colorDarkGray">#4F4F4F</color>
+    <color name="colorDarkRed">#9e190f</color>
+    <color name="colorRed">#FF0000</color>
+    <color name="colorLightBlue">#00BFFF</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorLightYellow">#efcb19</color>
+
+    <color name="colorLightBlack">#1F1F1F</color>
+
+    <color name="text">#1FC6B2</color>
+</resources>
