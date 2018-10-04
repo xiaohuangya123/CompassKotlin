@@ -71,8 +71,8 @@ class CompassView : View {
     }
     //画内部渐变圆
     private fun drawInnerCircle(){
-        val shader = RadialGradient(circleX,circleY,insideRadius/2
-                , intArrayOf(Color.parseColor("#323232"),Color.parseColor("#1F1F1F"))
+        val shader = RadialGradient(circleX,circleY,insideRadius*3/5
+                , intArrayOf(Color.parseColor("#2B2B2B"),Color.parseColor("#1F1F1F"))
                 ,null, Shader.TileMode.CLAMP)
         val paint = Paint()
         paint.setAntiAlias(true)

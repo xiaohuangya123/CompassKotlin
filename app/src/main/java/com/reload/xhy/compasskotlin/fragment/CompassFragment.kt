@@ -7,6 +7,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +33,7 @@ class CompassFragment : Fragment() {
     lateinit var locationClientContinue: AMapLocationClient
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        //compassFragment的布局加载
         var view = inflater.inflate(R.layout.fragment_compass,container,false)
         val compassView = view.findViewById<CompassView>(R.id.id_compassView)
         //注册传感器，实现compassView转动
