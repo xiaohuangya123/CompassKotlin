@@ -11,7 +11,6 @@ import com.reload.xhy.compasskotlin.fragment.PostcardFragment
 class MyViewPagerAadpter(fm :FragmentManager) : FragmentPagerAdapter(fm){
 
     override fun getItem(position: Int): Fragment {
-        Log.d("Rxjava","TTTTTTTTTTTTTTTTTTTTTT")
         when(position){
             0 -> return CompassFragment()
             1 -> return PostcardFragment()
