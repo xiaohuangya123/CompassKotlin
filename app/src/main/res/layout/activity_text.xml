@@ -6,4 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".TextActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/test_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationIcon="@drawable/back">
+
+    </android.support.v7.widget.Toolbar>
+
 </android.support.constraint.ConstraintLayout>

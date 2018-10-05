@@ -7,26 +7,17 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import kotlinx.android.synthetic.main.activity_text.*
 
 class TextActivity : AppCompatActivity() {
-
-    lateinit var sensorManager: SensorManager
-    lateinit var sensorEventListener: SensorEventListener
-    internal var `val`: Float = 0.toFloat()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_text)
 
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        sensorEventListener = object : SensorEventListener {
-            override fun onSensorChanged(event: SensorEvent) {
-                `val` = event.values[0]
-            }
+        setSupportActionBar(test_toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
-            override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
-
-            }
-        }
     }
 }

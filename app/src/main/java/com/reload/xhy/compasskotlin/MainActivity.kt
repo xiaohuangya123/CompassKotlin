@@ -8,6 +8,7 @@ import com.bumptech.glide.util.Util
 import com.reload.xhy.compasskotlin.adapter.MyViewPagerAadpter
 import com.reload.xhy.compasskotlin.utils.Utils
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.startActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,7 +22,16 @@ class MainActivity : AppCompatActivity() {
         addNavigationListener()
         //viewPager左右滑动事件添加
         addViewPagerScrollListener()
+        //点击赞赏按钮跳转页面
+        goRewardPage()
 
+    }
+
+    //点击赞赏按钮跳转页面
+    private fun goRewardPage(){
+        id_toolbar_reward_btn.setOnClickListener {
+            startActivity<RewardActivity>()
+        }
     }
 
     //viewPager左右滑动事件添加

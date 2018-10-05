@@ -11,8 +11,9 @@
     <color name="colorLightBlue">#00BFFF</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorLightYellow">#efcb19</color>
-
     <color name="colorLightBlack">#1F1F1F</color>
+    <color name="colorRed2">#de2e2e</color>
+    <color name="colorBlue2">#0099ff</color>
 
     <color name="test">#1FC6B2</color>
 </resources>

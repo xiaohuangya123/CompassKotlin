@@ -37,22 +37,19 @@
             android:name="com.amap.api.v2.apikey"
             android:value="f671f27535e76cefac3f4a06a427e971" />
 
-        <activity android:name=".MainActivity">
-
-        </activity>
+        <activity android:name=".MainActivity" />
         <activity
             android:name=".SplashActivity"
             android:theme="@style/AppTheme.splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".TextActivity" />
+        <activity android:name=".RewardActivity"></activity>
 
         <service android:name="com.amap.api.location.APSService" />
-
-        <activity android:name=".TextActivity"></activity>
     </application>
 
 </manifest>
