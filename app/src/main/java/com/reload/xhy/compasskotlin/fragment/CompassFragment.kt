@@ -1,13 +1,18 @@
 package com.reload.xhy.compasskotlin.fragment
 
+import android.Manifest
+import android.Manifest.*
 import android.content.Context
+import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
-import android.support.v7.widget.Toolbar
+import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +27,13 @@ import com.reload.xhy.compasskotlin.utils.Utils
 import kotlinx.android.synthetic.main.fragment_compass.*
 import java.math.BigDecimal
 
-class CompassFragment : Fragment() {
+class CompassFragment : BaseFragment() {
+
+    var needPermissions = arrayOf<String>(Manifest.permission.ACCESS_COARSE_LOCATION
+            , Manifest.permission.ACCESS_FINE_LOCATION
+            , Manifest.permission.WRITE_EXTERNAL_STORAGE
+            , Manifest.permission.READ_EXTERNAL_STORAGE
+            , Manifest.permission.READ_PHONE_STATE)
 
     //获取指南针方向的传感器
     lateinit var sensorManager : SensorManager
@@ -36,11 +47,30 @@ class CompassFragment : Fragment() {
         //compassFragment的布局加载
         var view = inflater.inflate(R.layout.fragment_compass,container,false)
         val compassView = view.findViewById<CompassView>(R.id.id_compassView)
+
+        //运行时权限
+//        checkRuntimePermission(needPermissions)
+
         //注册传感器，实现compassView转动
         registSensor(compassView)
         //运用高德API获取具体经纬度，地址
         getLocationInfo()
         return view
+    }
+
+    //6.0及以上系统运行时权限申请
+    private fun checkRuntimePermission(needPermissions : Array<String>){
+        if(activity!!.applicationInfo!!.targetSdkVersion >= 23){
+            var i = 1
+            for (p in needPermissions){
+                if(ContextCompat.checkSelfPermission(requireContext(), p)
+                        != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(requireActivity(), needPermissions,111)
+                }
+                i++
+                Log.d("ARS", " i="+i)
+            }
+        }
     }
 
     //运用高德API获取具体经纬度，地址
@@ -83,7 +113,6 @@ class CompassFragment : Fragment() {
         id_speed.text = String.format("%.2f",(location.speed*3.6)) + "km/h"
         id_priovider.text = location.provider
         id_satelliteNum.text = location.satellites.toString()
-
     }
 
     //注册传感器，实现compassView转动
@@ -137,7 +166,6 @@ class CompassFragment : Fragment() {
         } else {
             miaoStr = Integer.toString(miao)
         }
-
         return if (value < 0) "-$duStr°$fenStr′$miaoStr″" else "$duStr°$fenStr′$miaoStr″"
     }
 

@@ -2,9 +2,10 @@ package com.reload.xhy.compasskotlin
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import com.bumptech.glide.util.Util
+import android.view.KeyEvent
 import com.reload.xhy.compasskotlin.adapter.MyViewPagerAadpter
 import com.reload.xhy.compasskotlin.utils.Utils
 import kotlinx.android.synthetic.main.activity_main.*
@@ -94,6 +95,31 @@ class MainActivity : AppCompatActivity() {
                 Utils.setWindowStatusBarColor(this@MainActivity,R.color.colorLightBlue)
             }
         }
+    }
+
+    /**
+     * 在fragment中申请运行时权限是，无法回调fragment中的onRequestPermissionsResult方法，
+     *会回调activity中相应方法，所以需要在MainActivity中重写该方法，并指明回调Fragment
+     *中该方法
+     */
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        var fragmentList : List<Fragment> = supportFragmentManager.fragments
+        if(fragmentList == null){
+            return
+        }
+        for(fragment in fragmentList){
+            fragment.onRequestPermissionsResult(requestCode,permissions,grantResults)
+        }
+    }
+
+    //点击返回键，杀死应用
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            finish()
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
 }
