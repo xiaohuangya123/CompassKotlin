@@ -1,14 +1,11 @@
 package com.reload.xhy.compasskotlin.fragment;
 
 import android.Manifest;
-import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -16,14 +13,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.reload.xhy.compasskotlin.R;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,16 +72,10 @@ public class BaseFragment extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.d("TTT", "11111111111111111");
         if(PERMISSON_REQUESTCODE == requestCode){
-            Log.d("TTT", "222222222222222222");
             if(!verifyPermissions(grantResults)){
-                Log.d("TTT", "333333333333333");
                 showMissingPermissionDialog();
                 isNeedCheck = false;
-            }else {
-                Log.d("TTT", "4444444444444444444");
-
             }
         }
     }
