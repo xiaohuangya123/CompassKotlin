@@ -1,10 +1,7 @@
 package com.reload.xhy.compasskotlin.fragment
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Paint
+import android.graphics.*
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -110,12 +107,21 @@ class PostcardFragment : Fragment(){
         var bitmaptemp = bitmap.copy(bitmapConfig,true)
         var canvas = Canvas(bitmaptemp)
         var paint = Paint()
-        paint.textSize = 200f
-        paint.setColor(resources.getColor(R.color.colorAccent))
+        paint.textSize = 70f
+        paint.setColor(resources.getColor(R.color.colorWhite))
 
         var sp = activity?.getSharedPreferences("data", 0)
-        var text = sp?.getString("city", "") + "\r\n" + sp?.getString("latitude", "") + "\r\n" + sp?.getString("longitude", "")
-        canvas.drawText(text, 200f, 200f ,paint)
+        var text = sp?.getString("city", "") +
+                "\r\n" + "海拔：" + sp?.getString("altitude","") +  "m" +
+                "\r\n" + "纬度：" + sp?.getString("latitude", "") +
+                "\r\n" + "经度：" + sp?.getString("longitude", "")
+
+        //获取经纬度，位置，海拔文字的高宽
+        var bounds = Rect()
+        paint.getTextBounds(text, 0, text.length, bounds)
+
+        canvas.drawText(text, (bitmaptemp.width-bounds.width()).toFloat()-48
+                , (bitmaptemp.height-bounds.height()).toFloat() ,paint)
 
         bitmaptemp.compress(Bitmap.CompressFormat.JPEG,100,bos)
         bos.flush()

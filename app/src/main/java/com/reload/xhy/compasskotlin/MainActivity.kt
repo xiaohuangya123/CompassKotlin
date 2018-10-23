@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * 在fragment中申请运行时权限是，无法回调fragment中的onRequestPermissionsResult方法，
+     * 在fragment中申请运行时权限时，无法回调fragment中的onRequestPermissionsResult方法，
      *会回调activity中相应方法，所以需要在MainActivity中重写该方法，并指明回调Fragment
      *中该方法
      */

@@ -90,6 +90,7 @@ class CompassFragment : BaseFragment() {
         editor?.putString("latitude", latitude)
         editor?.putString("longitude",longitude)
         editor?.putString("city",location.city)
+        editor?.putString("altitude",location.altitude.toInt().toString())
         editor?.apply()
     }
 
