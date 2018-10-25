@@ -10,22 +10,35 @@
         android:id="@+id/id_camera_iv"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginBottom="32dp"
         android:scaleType="centerCrop"
         android:src="@drawable/camera1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="0dp"
+        android:layout_height="250dp"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ocean" />
 
     <ImageView
         android:id="@+id/show_img"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="24dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/camera2"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/id_camera_iv" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+
 
 
 </android.support.constraint.ConstraintLayout>

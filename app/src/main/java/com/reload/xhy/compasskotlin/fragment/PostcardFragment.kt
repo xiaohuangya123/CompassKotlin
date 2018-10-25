@@ -1,7 +1,10 @@
 package com.reload.xhy.compasskotlin.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.*
+import android.media.ExifInterface
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -14,6 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import com.bumptech.glide.Glide
 import com.reload.xhy.compasskotlin.R
 import java.io.BufferedOutputStream
 import java.io.File
@@ -27,6 +31,7 @@ class PostcardFragment : Fragment(){
     lateinit var imageUriCamera :Uri
     lateinit var imageUriPostcard :Uri
     lateinit var showImg :ImageView
+    lateinit var imageFileCamera :File
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view = inflater.inflate(R.layout.fragment_postcard,container,false)
@@ -46,7 +51,10 @@ class PostcardFragment : Fragment(){
                 if(resultCode == -1){
                     //保存原始照片
                     var bitmap = BitmapFactory.decodeStream(activity?.contentResolver?.openInputStream(imageUriCamera))
-                    activity?.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, imageUriCamera))
+                    //通知系统相册扫描新拍的照片，更新系统相册
+                    MediaScannerConnection.scanFile(activity, arrayOf(imageFileCamera.absolutePath)
+                            , arrayOf("image/jpeg")
+                            , { path, uri ->  Log.d("TTT", path) })
                     //创建并保存带水印照片
                     saveWaterMarkPicture(bitmap)
                 }
@@ -57,7 +65,7 @@ class PostcardFragment : Fragment(){
     //获取系统相机拍照
     private fun getSysCameraToTakePhoto(){
         var filePath = Environment.getExternalStorageDirectory().toString() + File.separator + Environment.DIRECTORY_DCIM+File.separator+"Camera"+File.separator
-        var imageFileCamera = File(filePath,SimpleDateFormat("yyyyMMdd_HHmmss").format(Date()) + ".jpg")
+        imageFileCamera = File(filePath,SimpleDateFormat("yyyyMMdd_HHmmss").format(Date()) + ".jpg")
         //判断目录是否存在 没有则创建目录
         if(!File(filePath).exists()){
             File(filePath).mkdir()
@@ -81,8 +89,8 @@ class PostcardFragment : Fragment(){
     //创建并保存带水印照片
     private fun saveWaterMarkPicture( bitmap : Bitmap){
         var filePath = Environment.getExternalStorageDirectory().toString() + File.separator + Environment.DIRECTORY_DCIM + File.separator+"postcard"+File.separator
-        Log.d("TTT", filePath)
-        var imageFilePostcard = File(filePath,SimpleDateFormat("yyyyMMdd_HHmmss").format(Date()) + ".jpg")
+        var fileName = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date()) + ".jpg"
+        var imageFilePostcard = File(filePath,fileName)
         //判断目录是否存在 没有则创建目录
         if(!File(filePath).exists()){
             File(filePath).mkdir()
@@ -100,11 +108,16 @@ class PostcardFragment : Fragment(){
 
         var bos = BufferedOutputStream(FileOutputStream(imageFilePostcard))
 
-        var bitmapConfig : Bitmap.Config = bitmap.config
-        if(bitmapConfig == null){
-            bitmapConfig = Bitmap.Config.ARGB_8888
+        var bitmaptemp = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, Matrix(), true)
+        //如果手机是三星，则进行相片旋转90°处理
+        if("samsung" == getPhoneBrand()){
+            var matrix = Matrix()
+//            matrix.postRotate(readPictureDegree(imageFilePostcard.absolutePath))
+            matrix.postRotate(90f)
+            Log.d("TTTs", readPictureDegree(imageFilePostcard.absolutePath).toString())
+            bitmaptemp = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
         }
-        var bitmaptemp = bitmap.copy(bitmapConfig,true)
+
         var canvas = Canvas(bitmaptemp)
         var paint = Paint()
         paint.textSize = 70f
@@ -126,7 +139,36 @@ class PostcardFragment : Fragment(){
         bitmaptemp.compress(Bitmap.CompressFormat.JPEG,100,bos)
         bos.flush()
         bos.close()
-        activity?.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, imageUriPostcard))
-        showImg.setImageBitmap(bitmaptemp)
+        //通知系统相册扫描新拍的照片，更新系统相册
+        MediaScannerConnection.scanFile(activity, arrayOf(imageFilePostcard.absolutePath)
+                , arrayOf("image/jpeg")
+                , { path, uri ->  Log.d("TTT", path) })
+        Glide.with(this).load(bitmaptemp).into(showImg)
+//        showImg.setImageBitmap(bitmaptemp)
     }
+
+    //获取照片exif信息中的旋转角度
+    private fun readPictureDegree(path :String) :Float {
+        var degree = 0
+        var exifInterface = ExifInterface(path)
+        var orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION ,ExifInterface.ORIENTATION_NORMAL)
+        when(orientation){
+            ExifInterface.ORIENTATION_ROTATE_90 -> {
+                degree = 90
+            }
+            ExifInterface.ORIENTATION_ROTATE_180 -> {
+                degree = 180
+            }
+            ExifInterface.ORIENTATION_ROTATE_270 -> {
+                degree = 270
+            }
+        }
+        return degree.toFloat()
+    }
+
+    //获取手机品牌
+    private fun getPhoneBrand() : String{
+        return android.os.Build.BRAND
+    }
+
 }
