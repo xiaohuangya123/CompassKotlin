@@ -1,6 +1,5 @@
 package com.reload.xhy.compasskotlin.fragment
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.*
 import android.media.ExifInterface
@@ -12,11 +11,15 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.support.v4.content.FileProvider
+import android.support.v4.view.PagerAdapter
+import android.support.v4.view.ViewPager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.reload.xhy.compasskotlin.R
 import java.io.BufferedOutputStream
@@ -24,24 +27,93 @@ import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
-class PostcardFragment : Fragment(){
+class PostcardFragment : Fragment(), ViewPager.OnPageChangeListener{
 
     val REQUEST_CODE = 119
     lateinit var imageUriCamera :Uri
     lateinit var imageUriPostcard :Uri
     lateinit var showImg :ImageView
     lateinit var imageFileCamera :File
+    lateinit var viewpager :ViewPager
+    lateinit var imageText :TextView
+    lateinit var llPoint :LinearLayout
+    lateinit var imageviews :ArrayList<ImageView>
+    lateinit var texts : Array<String>
+    lateinit var imageResIds :IntArray
+    //记录轮播图片上第一个圆点的位置
+    var lastPosition = 0
+    var isRuning = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view = inflater.inflate(R.layout.fragment_postcard,container,false)
         showImg = view.findViewById(R.id.show_img)
+
+        //初始化轮播图片相关view
+        initPictureRollingViews(view)
+        //初始化轮播图片，文字等数据
+        initPictureRollingDate()
+        //初始化适配器
+        initPictureRollingAdapter()
+
+        Thread{
+            run {
+                while (isRuning){
+                    Thread.sleep(3000)
+                    activity?.runOnUiThread{viewpager.currentItem =viewpager.currentItem + 1}
+                }
+            }
+        }.start()
+
         val cameraImageView = view.findViewById<ImageView>(R.id.id_camera_iv)
         cameraImageView.setOnClickListener {
             //获取系统相机拍照
             getSysCameraToTakePhoto()
         }
         return view
+    }
+
+    //初始化适配器,或者说图片轮播逻辑
+    private fun initPictureRollingAdapter(){
+        llPoint.getChildAt(lastPosition).isEnabled = true
+        imageText.text = texts[0]
+        viewpager.adapter = MyPagerAdapter()
+        viewpager.setOnPageChangeListener(this)
+        viewpager.currentItem = 5000000
+    }
+
+    //初始化轮播图片相关view
+    private fun initPictureRollingViews(view: View){
+        viewpager = view.findViewById(R.id.id_postcard_viewpager)
+        imageText = view.findViewById(R.id.id_postcard_text_tv)
+        llPoint = view.findViewById(R.id.id_postcard_point_ll)
+    }
+
+    //初始化轮播图片，文字等数据
+    private fun initPictureRollingDate(){
+        //轮播图片资源
+        imageResIds = intArrayOf(R.drawable.benz,R.drawable.ocean,R.drawable.qiaoba)
+        //轮播图片文字描述信息
+        texts = arrayOf<String>("奔驰","大海","乔巴")
+        imageviews = ArrayList()
+        var pointview :View
+        for (id in imageResIds.indices){
+            var imageView = ImageView(activity)
+            imageView.setImageResource(imageResIds[id])
+            imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+            imageviews.add(imageView)
+
+            //轮播图片上的小圆点
+            pointview = View(activity)
+            pointview.setBackgroundResource(R.drawable.selector_postcard_point)
+            var params = LinearLayout.LayoutParams(20,20)
+            if(id !=0){
+                params.leftMargin = 20
+            }
+            pointview.isEnabled = false
+            llPoint.addView(pointview, params)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -60,6 +132,11 @@ class PostcardFragment : Fragment(){
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        isRuning = false
     }
 
     //获取系统相机拍照
@@ -144,7 +221,6 @@ class PostcardFragment : Fragment(){
                 , arrayOf("image/jpeg")
                 , { path, uri ->  Log.d("TTT", path) })
         Glide.with(this).load(bitmaptemp).into(showImg)
-//        showImg.setImageBitmap(bitmaptemp)
     }
 
     //获取照片exif信息中的旋转角度
@@ -169,6 +245,50 @@ class PostcardFragment : Fragment(){
     //获取手机品牌
     private fun getPhoneBrand() : String{
         return android.os.Build.BRAND
+    }
+
+    //ViewPager 的 adapter
+    inner class MyPagerAdapter : PagerAdapter(){
+
+        //指定复用的判断逻辑，固定写法：view == object
+        override fun isViewFromObject(view: View, `object`: Any): Boolean {
+            //当创建新的条目，又反回来，判断view是否可以被复用(即是否存在)
+            return view === `object`
+//            return false
+        }
+
+        //返回显示数据的总条数，为了实现无限循环，把返回的值设置为最大整数
+        override fun getCount(): Int {
+            return Int.MAX_VALUE
+        }
+
+        override fun instantiateItem(container: ViewGroup, position: Int): Any {
+            var newPosition = position % imageviews.size
+            var imageView = ImageView(activity)
+            imageView.setBackgroundResource(imageResIds[newPosition])
+//            var imageView = imageviews[newPosition]
+            container.addView(imageView)
+            return imageView
+        }
+
+       override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+           container.removeView(`object` as View)
+       }
+    }
+
+    //ViewPager.OnPageChangeListener 需要实现的方法
+    override fun onPageScrollStateChanged(state: Int) {
+    }
+
+    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+    }
+
+    override fun onPageSelected(position: Int) {
+        var newPositon = position % imageviews.size
+        imageText.text = texts[newPositon]
+        llPoint.getChildAt(lastPosition).isEnabled = false
+        llPoint.getChildAt(newPositon).isEnabled = true
+        lastPosition = newPositon
     }
 
 }
