@@ -1,4 +1,4 @@
-package com.reload.xhy.compasskotlin.fragment;
+package com.reload.xhy.compasskotlin.base;
 
 import android.Manifest;
 import android.content.DialogInterface;

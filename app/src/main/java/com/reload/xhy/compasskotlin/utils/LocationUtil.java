@@ -20,7 +20,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class Utils {
+public class LocationUtil {
     /**
      *  开始定位
      */

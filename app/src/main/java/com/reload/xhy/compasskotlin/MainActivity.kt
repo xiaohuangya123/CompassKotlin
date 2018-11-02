@@ -4,14 +4,14 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
 import android.view.KeyEvent
 import com.reload.xhy.compasskotlin.adapter.MyViewPagerAadpter
-import com.reload.xhy.compasskotlin.utils.Utils
+import com.reload.xhy.compasskotlin.base.BaseActivity
+import com.reload.xhy.compasskotlin.utils.LocationUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.startActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,17 +82,17 @@ class MainActivity : AppCompatActivity() {
             0-> {
                 id_toolbar_title_tv.text = resources.getText(R.string.title_compass)
                 id_toolbar.setBackgroundColor(resources.getColor(R.color.colorLightBlack))
-                Utils.setWindowStatusBarColor(this@MainActivity,R.color.colorLightBlack)
+                LocationUtil.setWindowStatusBarColor(this@MainActivity,R.color.colorLightBlack)
             }
             1-> {
                 id_toolbar_title_tv.text = resources.getText(R.string.title_postcard)
                 id_toolbar.setBackgroundColor(resources.getColor(R.color.colorAccent))
-                Utils.setWindowStatusBarColor(this@MainActivity,R.color.colorAccent)
+                LocationUtil.setWindowStatusBarColor(this@MainActivity,R.color.colorAccent)
             }
             2-> {
                 id_toolbar_title_tv.text = resources.getText(R.string.title_my)
                 id_toolbar.setBackgroundColor(resources.getColor(R.color.colorLightBlue))
-                Utils.setWindowStatusBarColor(this@MainActivity,R.color.colorLightBlue)
+                LocationUtil.setWindowStatusBarColor(this@MainActivity,R.color.colorLightBlue)
             }
         }
     }

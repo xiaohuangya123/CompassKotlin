@@ -191,7 +191,6 @@ class PostcardFragment : Fragment(), ViewPager.OnPageChangeListener{
             var matrix = Matrix()
 //            matrix.postRotate(readPictureDegree(imageFilePostcard.absolutePath))
             matrix.postRotate(90f)
-            Log.d("TTTs", readPictureDegree(imageFilePostcard.absolutePath).toString())
             bitmaptemp = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
         }
 
@@ -254,7 +253,6 @@ class PostcardFragment : Fragment(), ViewPager.OnPageChangeListener{
         override fun isViewFromObject(view: View, `object`: Any): Boolean {
             //当创建新的条目，又反回来，判断view是否可以被复用(即是否存在)
             return view === `object`
-//            return false
         }
 
         //返回显示数据的总条数，为了实现无限循环，把返回的值设置为最大整数

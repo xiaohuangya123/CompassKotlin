@@ -6,7 +6,6 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +13,9 @@ import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.reload.xhy.compasskotlin.R
+import com.reload.xhy.compasskotlin.base.BaseFragment
 import com.reload.xhy.compasskotlin.compass.CompassView
-import com.reload.xhy.compasskotlin.utils.Utils
+import com.reload.xhy.compasskotlin.utils.LocationUtil
 import kotlinx.android.synthetic.main.fragment_compass.*
 import java.math.BigDecimal
 
@@ -59,11 +59,11 @@ class CompassFragment : BaseFragment() {
             val callBackTime = System.currentTimeMillis()
             val sb = StringBuffer()
             sb.append("持续定位完成 $continueCount\n")
-            sb.append("回调时间: " + Utils.formatUTC(callBackTime, null) + "\n")
+            sb.append("回调时间: " + LocationUtil.formatUTC(callBackTime, null) + "\n")
             if (null == location) {
                 sb.append("定位失败：location is null !")
             } else {
-                sb.append(Utils.getLocationStr(location))
+                sb.append(LocationUtil.getLocationStr(location))
                 //更新界面信息
                 updateInfo(location)
             }
